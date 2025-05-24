@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Charter Pricing Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 2rem;
+      color: #333;
+    }
+    h2 {
+      text-align: center;
+      color: #222;
+    }
+    .calculator {
+      max-width: 500px;
+      margin: 2rem auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    label {
+      display: block;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .results {
+      margin-top: 2rem;
+      background: #f1f3f5;
+      padding: 1rem;
+      border-radius: 6px;
+    }
+    .results p {
+      margin: 0.5rem 0;
+    }
+  </style>
+</head>
+<body>
+  <h2>Charter Pricing Calculator</h2>
+  <div class="calculator">
+    <label>Wholesale Cost ($):
+      <input type="number" id="wholesale" step="0.01">
+    </label>
+
+    <label>Markup Type:
+      <select id="markupType">
+        <option value="percent">Percent</option>
+        <option value="flat" selected>Flat Amount</option>
+      </select>
+    </label>
+
+    <label>Markup:
+      <input type="number" id="markup" step="0.01">
+    </label>
+
+    <label>Tax Rate (%):
+      <input type="number" id="tax" step="0.01">
+    </label>
+
+    <label>Commission Rate (%):
+      <input type="number" id="commission" value="100" step="0.01">
+    </label>
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div class="results">
+      <p id="subtotal">Subtotal (Before Tax): $0.00</p>
+      <p id="taxAmount">Tax Amount: $0.00</p>
+      <p id="totalPrice">Total Price to Client: $0.00</p>
+      <p id="commissionAmount">Commission Earned: $0.00</p>
+    </div>
+  </div>
+
+  <script>
+    function formatNumber(num) {
+      return num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function calculate() {
+      const wholesale = parseFloat(document.getElementById('wholesale').value) || 0;
+      const markupType = document.getElementById('markupType').value;
+      const markup = parseFloat(document.getElementById('markup').value) || 0;
+      const taxRate = parseFloat(document.getElementById('tax').value) || 0;
+      const commissionRate = (parseFloat(document.getElementById('commission').value) || 0) / 100;
+
+      let markupAmount = markupType === 'percent' ? wholesale * (markup / 100) : markup;
+      let subtotal = wholesale + markupAmount;
+      let taxAmount = subtotal * (taxRate / 100);
+      let totalPrice = subtotal + taxAmount;
+      let commission = markupAmount * commissionRate;
+
+      document.getElementById('subtotal').innerText = `Subtotal (Before Tax): $${formatNumber(subtotal)}`;
+      document.getElementById('taxAmount').innerText = `Tax Amount: $${formatNumber(taxAmount)}`;
+      document.getElementById('totalPrice').innerText = `Total Price to Client: $${formatNumber(totalPrice)}`;
+      document.getElementById('commissionAmount').innerText = `Commission Earned: $${formatNumber(commission)}`;
+    }
+  </script>
+</body>
+</html>
